@@ -12,6 +12,7 @@ export type EventBusOpts = {
 	name?: string
 	printLogs?: boolean
 	saveLogs?: boolean
+	mandatorySubscribers?: boolean
 	subscribers?: Map<string, Subscriber[]>
 }
 
@@ -19,6 +20,7 @@ export class EventBus {
 	name: string
 	printLogs: boolean = false
 	saveLogs: boolean = false
+	mandatorySubscribers: boolean = false
 	history: EventBusHistoryItem[] = []
 	subscribers: Map<string, Subscriber[]> = new Map()
 
@@ -31,27 +33,30 @@ export class EventBus {
 
 		const {
 			name = defaultName,
-			subscribers,
+			subscribers = new Map(),
 			printLogs = false,
 			saveLogs = false,
+			mandatorySubscribers = false,
 		} = opts
 
 		this.name = name
 		this.printLogs = printLogs
 		this.saveLogs = saveLogs
+		this.mandatorySubscribers = mandatorySubscribers
+		this.subscribers = subscribers
 
 		this.log('INIT', { subscribers })
-
-		if (subscribers) {
-			this.subscribers = subscribers
-		}
 	}
 
 	dispatch(event: string, params?: unknown) {
 		const subs = this.subscribers.get(event)
 
 		if (!subs) {
-			throw new Error(`No subscribers for event: ${event}`)
+			if (this.mandatorySubscribers) {
+				throw new Error(`No subscribers for event: ${event}`)
+			}
+			this.log('DISPATCH', { event, params, noSubs: true })
+			return
 		}
 
 		subs.forEach((callback) => {

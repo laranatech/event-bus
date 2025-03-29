@@ -1,6 +1,6 @@
 {
 	"name": "@laranatech/event-bus",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Larana EventBus",
 	"keywords": ["event bus", "events", "larana"],
 	"license": "MIT",
