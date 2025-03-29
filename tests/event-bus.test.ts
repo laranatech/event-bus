@@ -32,7 +32,7 @@ describe('', () => {
 	})
 
 	test('Dispatching unknown event', () => {
-		const bus = new EventBus()
+		const bus = new EventBus({})
 
 		const eventName = 'TEST-EVENT'
 		const params = { someParams: '123' }
@@ -63,12 +63,12 @@ describe('', () => {
 		const callback2 = (event: string, params?: unknown) => {}
 		const callback3 = (event: string, params?: unknown) => {}
 
-		const bus = new EventBus(
-			new Map<string, Subscriber[]>([
+		const bus = new EventBus({
+			subscribers: new Map<string, Subscriber[]>([
 				['TEST-EVENT', [callback1, callback2]],
 				['TEST-EVENT2', [callback3]],
-			])
-		)
+			]),
+		})
 
 		bus.unsubscribe('TEST-EVENT', callback2)
 
