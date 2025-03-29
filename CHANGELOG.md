@@ -1,3 +1,7 @@
+# 1.0.3
+
+- fix: build
+
 # 1.0.2
 
 - feat: mandatorySubscribers
